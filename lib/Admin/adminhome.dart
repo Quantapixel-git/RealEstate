@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:real_estate_quantapixel/Admin/AdminLogin.dart';
 import 'package:real_estate_quantapixel/Admin/PropertyStatus/profileActivationHomePage.dart';
 import 'package:real_estate_quantapixel/Admin/Users/adminUsers.dart';
+import 'package:real_estate_quantapixel/Admin/adminchangepassword.dart';
 import 'package:real_estate_quantapixel/Admin/query/adminquery.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -13,13 +14,13 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  Widget _currentScreen = const AdminDashboard(); 
+  Widget _currentScreen = const AdminDashboard();
 
   void _navigateToPage(Widget page) {
     setState(() {
       _currentScreen = page;
     });
-    Navigator.pop(context); 
+    Navigator.pop(context);
   }
 
   @override
@@ -31,7 +32,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 }
-
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -59,14 +59,12 @@ class AdminDashboard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Image.asset('assets/1.png',
-              width: 200), 
+          Image.asset('assets/1.png', width: 200),
         ],
       ),
     );
   }
 }
-
 
 class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -99,7 +97,6 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-
 class AdminDrawer extends StatelessWidget {
   final Function(Widget) onNavigate;
   const AdminDrawer({super.key, required this.onNavigate});
@@ -119,8 +116,7 @@ class AdminDrawer extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => Adminlogin()),
-                (Route<dynamic> route) =>
-                    false, 
+                (Route<dynamic> route) => false,
               );
             },
             child: Text("Logout", style: TextStyle(color: Colors.red)),
@@ -183,6 +179,12 @@ class AdminDrawer extends StatelessWidget {
             title: "Queries",
             context: context,
             page: AdminQueryScreen(),
+          ),
+          buildDrawerItem(
+            icon: Icons.question_answer,
+            title: "Change Password",
+            context: context,
+            page: ChangePasswordScreen(),
           ),
           const Spacer(),
           Divider(),
