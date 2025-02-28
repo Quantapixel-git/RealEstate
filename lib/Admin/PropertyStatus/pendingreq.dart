@@ -27,8 +27,7 @@ class _PendingPropertiesScreenState extends State<PendingPropertiesScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://quantapixel.in/realestate/api/getAllPendingProperties?status=1'),
+        Uri.parse('https://adshow.in/app/api/getAllPendingProperties?status=1'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -55,13 +54,15 @@ class _PendingPropertiesScreenState extends State<PendingPropertiesScreen> {
     }
   }
 
-  Future<void> updateProperty(int propertyId, int action) async {
+  Future<void> updateProperty(String propertyId, int action) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'https://quantapixel.in/realestate/api/approveRejectProperty'),
+        Uri.parse('https://adshow.in/app/api/approveRejectProperty'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'property_id': propertyId, 'action': action}),
+        body: jsonEncode({
+          'property_id': int.parse(propertyId),
+          'action': action
+        }), // Convert to int
       );
 
       if (response.statusCode == 200) {
@@ -153,11 +154,11 @@ class _PendingPropertiesScreenState extends State<PendingPropertiesScreen> {
                             style: GoogleFonts.poppins(fontSize: 14),
                           ),
                           Text(
-                            'User Name: ${property['user_name']}',
+                            'User  Name: ${property['user_name']}',
                             style: GoogleFonts.poppins(fontSize: 14),
                           ),
                           Text(
-                            'User Mobile: ${property['user_mobile']}',
+                            'User  Mobile: ${property['user_mobile']}',
                             style: GoogleFonts.poppins(fontSize: 14),
                           ),
                           Text(
@@ -214,7 +215,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl);
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 
   @override

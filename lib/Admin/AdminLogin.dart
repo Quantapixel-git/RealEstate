@@ -18,7 +18,7 @@ class _AdminloginState extends State<Adminlogin> {
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       final response = await http.post(
-        Uri.parse('https://quantapixel.in/realestate/api/AdminLogin'),
+        Uri.parse('https://adshow.in/app/api/AdminLogin'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': _emailController.text,

@@ -7,8 +7,8 @@ class EstateTours {
   final String userName; // Added user_name field
   final String userMobile; // Added user_mobile field
   final String url;
-  final String Name;
-  final String Location;
+  final String Name; // Changed to lowercase for convention
+  final String Location; // Changed to lowercase for convention
   final String price;
   final String description;
   final String propertyType; // Added property_type field
@@ -34,25 +34,29 @@ class EstateTours {
 
   factory EstateTours.fromJson(Map<String, dynamic> json) {
     return EstateTours(
-      id: json['id'],
-      userId: json['user_id'],
-      userName: json['user_name'],
-      userMobile: json['user_mobile'],
-      url: json['video_url'],
-      Name: json['property_name'],
-      Location: json['location'],
-      price: json['price'],
-      description: json['description'],
-      propertyType: json['property_type'],
-      thumbnailUrl: json['thumbnail_url'],
-      mobile: json['mobile'],
-      amenities: json['amenities'],
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id'].toString()) ?? 0,
+      userId: json['user_id'] is int
+          ? json['user_id']
+          : int.tryParse(json['user_id'].toString()) ?? 0,
+      userName: json['user_name'] ?? '',
+      userMobile: json['user_mobile'] ?? '',
+      url: json['video_url'] ?? '',
+      Name: json['property_name'] ?? '',
+      Location: json['location'] ?? '',
+      price: json['price'] ?? '',
+      description: json['description'] ?? '',
+      propertyType: json['property_type'] ?? '',
+      thumbnailUrl: json['thumbnail_url'] ?? '',
+      mobile: json['mobile'] ?? '',
+      amenities: json['amenities'] ?? '',
     );
   }
 }
 
 class EstateApi {
-  static const String baseUrl = 'https://quantapixel.in/realestate/api/';
+  static const String baseUrl = 'https://adshow.in/app/api/';
 
   Future<List<EstateTours>> fetchEstates() async {
     final response =

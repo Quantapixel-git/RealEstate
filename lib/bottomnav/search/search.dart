@@ -11,63 +11,83 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final _searchController = TextEditingController();
+  late final TextEditingController _searchController;
   List<Property> _properties = [];
-  List<Property> _allProperties = []; // Store all properties for filtering
+  List<Property> _allProperties = [];
   int _lastId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    _fetchProperties();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   Future<void> _fetchProperties() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://quantapixel.in/realestate/api/getTopFiveProperties'));
+      final response = await http
+          .get(Uri.parse('https://adshow.in/app/api/getTopFiveProperties'));
+
       if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        if (jsonData['status'] == 1) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        if (jsonData['status'] == 1 && jsonData['data'] is List) {
+          List<Property> fetchedProperties = (jsonData['data'] as List)
+              .map((property) => Property.fromJson(property))
+              .toList();
+
           setState(() {
-            _properties = (jsonData['data'] as List)
-                .map((property) => Property.fromJson(property))
-                .toList();
-            _allProperties = List.from(_properties);
+            _properties = fetchedProperties;
+            _allProperties = List.from(fetchedProperties);
             _lastId = _properties.isNotEmpty ? _properties.last.id : 0;
           });
         } else {
-          print('Error: ${jsonData['message']}');
+          debugPrint('Error: ${jsonData['message']}');
         }
       } else {
-        print('Failed to load properties: ${response.statusCode}');
+        debugPrint('Failed to load properties: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching properties: $e');
+      debugPrint('Error fetching properties: $e');
     }
   }
 
   Future<void> _fetchNextProperties() async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'https://quantapixel.in/realestate/api/getNextFiveProperties'),
+        Uri.parse('https://adshow.in/app/api/getNextFiveProperties'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'last_id': _lastId}),
       );
+
       if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        if (jsonData['status'] == 1) {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        if (jsonData['status'] == 1 && jsonData['data'] is List) {
+          List<Property> newProperties = (jsonData['data'] as List)
+              .map((property) => Property.fromJson(property))
+              .toList();
+
           setState(() {
-            List<Property> newProperties = (jsonData['data'] as List)
-                .map((property) => Property.fromJson(property))
-                .toList();
             _properties.addAll(newProperties);
             _allProperties.addAll(newProperties);
-            _lastId = newProperties.isNotEmpty ? newProperties.last.id : 0;
+            _lastId =
+                newProperties.isNotEmpty ? newProperties.last.id : _lastId;
           });
         } else {
-          print('Error: ${jsonData['message']}');
+          debugPrint('Error: ${jsonData['message']}');
         }
       } else {
-        print('Failed to load next properties: ${response.statusCode}');
+        debugPrint('Failed to load next properties: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching next properties: $e');
+      debugPrint('Error fetching next properties: $e');
     }
   }
 
@@ -82,17 +102,14 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _fetchProperties();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Find Your Property', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        title: const Text(
+          'Find Your Property',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.blue.shade900,
       ),
       body: Column(
@@ -113,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               itemCount: _properties.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -128,37 +145,45 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   },
                   child: Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
+                    margin: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                     elevation: 3,
                     child: Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.horizontal(
+                          borderRadius: const BorderRadius.horizontal(
                               left: Radius.circular(12)),
                           child: Image.network(
                             _properties[index].thumbnailUrl,
                             width: 120,
                             height: 100,
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 120,
+                                height: 100,
+                                color: Colors.grey.shade300,
+                                child: const Icon(Icons.image_not_supported),
+                              );
+                            },
                           ),
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   _properties[index].propertyName,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
                                   _properties[index].location,
                                   style: TextStyle(
@@ -177,11 +202,12 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue.shade900,
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
@@ -202,18 +228,21 @@ class Property {
   final String location;
   final String thumbnailUrl;
 
-  Property(
-      {required this.id,
-      required this.propertyName,
-      required this.location,
-      required this.thumbnailUrl});
+  Property({
+    required this.id,
+    required this.propertyName,
+    required this.location,
+    required this.thumbnailUrl,
+  });
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
-      id: json['id'],
-      propertyName: json['property_name'],
-      location: json['location'],
-      thumbnailUrl: json['thumbnail_url'],
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id'].toString()) ?? 0,
+      propertyName: json['property_name'] as String? ?? 'Unknown',
+      location: json['location'] as String? ?? 'Unknown',
+      thumbnailUrl: json['thumbnail_url'] as String? ?? '',
     );
   }
 }

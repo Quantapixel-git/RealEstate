@@ -23,14 +23,19 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> fetchUsers() async {
-    final url = Uri.parse('https://quantapixel.in/realestate/api/get-users');
+    final url = Uri.parse('https://adshow.in/app/api/get-users');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == 1) {
           setState(() {
-            users = data['users'] ?? [];
+            // Ensure status is treated as an integer
+            users = (data['users'] as List).map((user) {
+              user['status'] =
+                  int.parse(user['status'].toString()); // Convert status to int
+              return user;
+            }).toList();
             isLoading = false;
           });
         } else {
@@ -49,7 +54,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> deleteUser(int userId) async {
-    final url = Uri.parse('https://quantapixel.in/realestate/api/delete-user');
+    final url = Uri.parse('https://adshow.in/app/api/delete-user');
     try {
       final response = await http.post(url, body: {
         'user_id': userId.toString(),
@@ -79,8 +84,7 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> updateUserStatus(int userId, int status) async {
-    final url =
-        Uri.parse('https://quantapixel.in/realestate/api/updateUserStatus');
+    final url = Uri.parse('https://adshow.in/app/api/updateUserStatus');
     try {
       final response = await http.post(url, body: {
         'user_id': userId.toString(),
@@ -98,9 +102,10 @@ class _UsersPageState extends State<UsersPage> {
           });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text(status == 1
-                    ? 'User  unblocked successfully'
-                    : 'User  blocked successfully')),
+              content: Text(status == 1
+                  ? 'User  unblocked successfully' // Correct message for unblocking
+                  : 'User  blocked successfully'), // Correct message for blocking
+            ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -178,70 +183,74 @@ class _UsersPageState extends State<UsersPage> {
                                   style: GoogleFonts.poppins(
                                       fontSize: 12, color: Colors.grey)),
                               SizedBox(height: 8),
-                                ElevatedButton(
-                            onPressed: () {
-                              // Navigate to ChatListPage with the user ID
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatListPage(userId: user['id']),
-                                ),
-                              );
-                            },
-                            child: Text('View Chat'),
-                          ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  user['status'] == 1
-                                      ? Icons.check_circle
-                                      : Icons.block,
-                                  color: user['status'] == 1
-                                      ? Colors.green
-                                      : Colors.red,
-                                ),
+                              ElevatedButton(
                                 onPressed: () {
-                                  // Toggle user status
-                                  int newStatus = user['status'] == 1 ? 2 : 1;
-                                  updateUserStatus(user['id'], newStatus);
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text('Delete User',
-                                          style: TextStyle()),
-                                      content: Text(
-                                          'Are you sure you want to delete this user?',
-                                          style: GoogleFonts.poppins()),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: Text('Cancel',
-                                              style: GoogleFonts.poppins()),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            deleteUser(user['id']);
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('Confirm',
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.red)),
-                                        ),
-                                      ],
+                                  int userId =
+                                      int.tryParse(user['id'].toString()) ?? 0;
+                                  // Navigate to ChatListPage with the user ID
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChatListPage(userId: userId),
                                     ),
                                   );
                                 },
+                                child: Text('View Chat'),
                               ),
                             ],
+                          ),
+                          DropdownButton<int>(
+                            value: user['status'],
+                            items: [
+                              DropdownMenuItem(
+                                value: 1,
+                                child: Text('Unblock',
+                                    style: GoogleFonts.poppins()),
+                              ),
+                              DropdownMenuItem(
+                                value: 2,
+                                child:
+                                    Text('Block', style: GoogleFonts.poppins()),
+                              ),
+                            ],
+                            onChanged: (int? newValue) {
+                              if (newValue != null) {
+                                updateUserStatus(user['id'], newValue);
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title:
+                                      Text('Delete User', style: TextStyle()),
+                                  content: Text(
+                                      'Are you sure you want to delete this user?',
+                                      style: GoogleFonts.poppins()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text('Cancel',
+                                          style: GoogleFonts.poppins()),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        deleteUser(user['id']);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Confirm',
+                                          style: GoogleFonts.poppins(
+                                              color: Colors.red)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

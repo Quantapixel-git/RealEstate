@@ -35,7 +35,8 @@ class _EstateshortshpState extends State<Estateshortshp> {
         .toList();
 
     if (filteredProperties.isNotEmpty) {
-      lastFetchedId = filteredProperties.last['id']; // Update last fetched ID
+      lastFetchedId = int.tryParse(filteredProperties.last['id'].toString()) ??
+          0; // Safely parse ID
     }
 
     setState(() {
@@ -57,7 +58,8 @@ class _EstateshortshpState extends State<Estateshortshp> {
 
     if (filteredNextProperties.isNotEmpty) {
       lastFetchedId =
-          filteredNextProperties.last['id']; // Update last fetched ID
+          int.tryParse(filteredNextProperties.last['id'].toString()) ??
+              0; // Safely parse ID
       setState(() {
         properties
             .addAll(filteredNextProperties); // Add new properties to the list

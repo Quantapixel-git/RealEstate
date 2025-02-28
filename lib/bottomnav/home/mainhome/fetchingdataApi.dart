@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:real_estate_quantapixel/bottomnav/home/mainhome/mymodel.dart';
 
 Future<List<Reel>> fetchReels() async {
-  final response = await http.get(Uri.parse('https://quantapixel.in/realestate/api/getTopFiveRandomHomeReels'));
+  final response = await http
+      .get(Uri.parse('https://adshow.in/app/api/getTopFiveRandomHomeReels'));
 
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(response.body)['data'];
@@ -14,7 +15,8 @@ Future<List<Reel>> fetchReels() async {
 }
 
 Future<List<Reel>> fetchVideos() async {
-  final response = await http.get(Uri.parse('https://quantapixel.in/realestate/api/getTopFiveRandomHomeVideos'));
+  final response = await http
+      .get(Uri.parse('https://adshow.in/app/api/getTopFiveRandomHomeVideos'));
 
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(response.body)['data'];

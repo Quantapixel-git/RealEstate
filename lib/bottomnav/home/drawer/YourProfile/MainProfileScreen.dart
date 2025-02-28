@@ -29,7 +29,7 @@ class _YourProfileState extends State<YourProfile> {
 
   Future<void> fetchTopFiveProperties() async {
     const String url =
-        "https://quantapixel.in/realestate/api/getTopFivePropertiesByUserId";
+        "https://adshow.in/app/api/getTopFivePropertiesByUserId";
 
     setState(() {
       isLoading = true;

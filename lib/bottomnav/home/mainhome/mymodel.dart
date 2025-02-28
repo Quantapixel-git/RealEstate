@@ -19,13 +19,15 @@ class Reel {
 
   factory Reel.fromJson(Map<String, dynamic> json) {
     return Reel(
-      id: json['id'],
-      userName: json['user_name'],
-      propertyName: json['property_name'],
-      thumbnailUrl: json['thumbnail_url'],
-      location: json['location'],
-      price: json['price'],
-      description: json['description'],
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id'].toString()) ?? 0,
+      userName: json['user_name'] ?? 'Unknown',
+      propertyName: json['property_name'] ?? 'Unnamed Property',
+      thumbnailUrl: json['thumbnail_url'] ?? '',
+      location: json['location'] ?? 'Unknown Location',
+      price: json['price']?.toString() ?? '0',
+      description: json['description'] ?? 'No description available',
     );
   }
 }

@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final String apiUrl = "https://quantapixel.in/realestate/api/sign-in";
+    final String apiUrl = "https://adshow.in/app/api/sign-in";
     setState(() {
       _isLoading = true;
     });

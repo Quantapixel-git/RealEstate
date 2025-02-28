@@ -30,8 +30,8 @@ class _LikedPropertiesPageState extends State<LikedPropertiesPage> {
       return;
     }
 
-    final url = Uri.parse(
-        "https://quantapixel.in/realestate/api/getAllLikedPropertiesByUserId");
+    final url =
+        Uri.parse("https://adshow.in/app/api/getAllLikedPropertiesByUserId");
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -57,8 +57,7 @@ class _LikedPropertiesPageState extends State<LikedPropertiesPage> {
 
     if (userId == null) return;
 
-    final url =
-        Uri.parse("https://quantapixel.in/realestate/api/removeLikedVideo");
+    final url = Uri.parse("https://adshow.in/app/api/removeLikedVideo");
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -68,10 +67,13 @@ class _LikedPropertiesPageState extends State<LikedPropertiesPage> {
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
       if (result['status'] == 1) {
+        // Successfully removed liked property
         setState(() {
-          likedProperties
-              .removeWhere((property) => property['id'] == propertyId);
+          likedProperties.removeWhere((property) =>
+              int.tryParse(property['id'].toString()) == propertyId);
         });
+        // Refresh the list of liked properties
+        fetchLikedProperties(); // Re-fetch liked properties
       } else {
         // Handle error if needed
         print("Error removing liked property: ${result['message']}");
@@ -138,8 +140,11 @@ class _LikedPropertiesPageState extends State<LikedPropertiesPage> {
                             IconButton(
                               icon: Icon(Icons.favorite, color: Colors.red),
                               onPressed: () {
+                                int propertyId =
+                                    int.tryParse(property['id'].toString()) ??
+                                        0; // Safely parse property ID
                                 removeLikedProperty(
-                                    property['id']); // Call remove method
+                                    propertyId); // Call remove method
                               },
                             ),
                             Icon(Icons.arrow_forward_ios,
@@ -151,7 +156,9 @@ class _LikedPropertiesPageState extends State<LikedPropertiesPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => PropertyDetailScreen(
-                                propertyId: property['id'], // Pass property ID
+                                propertyId:
+                                    int.tryParse(property['id'].toString()) ??
+                                        0, // Safely parse property ID
                               ),
                             ),
                           );

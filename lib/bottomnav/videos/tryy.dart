@@ -82,7 +82,7 @@ class _VideoScreenState extends State<VideoScreen> {
 
     // Make the API call
     final response = await http.post(
-      Uri.parse('https://quantapixel.in/realestate/api/storeSavedVideo'),
+      Uri.parse('https://adshow.in/app/api/storeSavedVideo'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -140,7 +140,7 @@ class _VideoScreenState extends State<VideoScreen> {
     };
 
     final response = await http.post(
-      Uri.parse('https://quantapixel.in/realestate/api/storeLikedVideo'),
+      Uri.parse('https://adshow.in/app/api/storeLikedVideo'),
       headers: {
         'Content-Type': 'application/json',
       },

@@ -33,10 +33,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _fetchChatHistory() async {
     try {
       final response = await http.post(
-        Uri.parse('https://quantapixel.in/realestate/api/getChatHistory'),
+        Uri.parse('https://adshow.in/app/api/getChatHistory'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          "id": int.parse(widget.receiverId),
+          "id": int.tryParse(widget.receiverId) ?? 0, // Safely parse receiverId
           "property_id": widget.propertyId,
         }),
       );
@@ -46,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
         if (decodedResponse is Map<String, dynamic> &&
             decodedResponse.containsKey('data')) {
           setState(() {
-            messages = decodedResponse['data'];
+            messages = decodedResponse['data'] ?? []; // Handle potential null
             isLoading = false;
           });
 
@@ -93,7 +93,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://quantapixel.in/realestate/api/storeChat'),
+        Uri.parse('https://adshow.in/app/api/storeChat'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(body),
       );
@@ -107,7 +107,9 @@ class _ChatScreenState extends State<ChatScreen> {
           _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      print("Error sending message: $e"); // Log the error
+    }
   }
 
   @override
@@ -178,7 +180,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 2),
                                   child: Text(
-                                    _formatTimestamp(message['created_at']),
+                                    _formatTimestamp(message['created_at'] ??
+                                        ""), // Handle null
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 12,

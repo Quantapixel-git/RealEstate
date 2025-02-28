@@ -53,7 +53,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       return;
     }
 
-    final String apiUrl = "https://quantapixel.in/realestate/api/edit-user";
+    final String apiUrl = "https://adshow.in/app/api/edit-user";
     final Map<String, dynamic> body = {
       "name": _nameController.text,
       "mobile": _phoneController.text,
@@ -149,6 +149,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             // Phone Number Field
             TextField(
               controller: _phoneController,
+              readOnly: true,
               decoration: InputDecoration(
                 labelText: "Phone Number",
                 labelStyle: GoogleFonts.poppins(),
@@ -157,6 +158,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
                 fillColor: Colors.grey.shade100,
+                
               ),
               keyboardType: TextInputType.phone,
             ),

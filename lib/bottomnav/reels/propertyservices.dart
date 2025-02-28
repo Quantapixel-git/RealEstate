@@ -1,10 +1,9 @@
-
 import 'dart:convert';
 import 'package:flutter/foundation.dart'; // For debugPrint
 import 'package:http/http.dart' as http;
 
 class PropertyService {
-  static const String _baseUrl = 'https://quantapixel.in/realestate/api';
+  static const String _baseUrl = 'https://adshow.in/app/api';
 
   // Fetch Top 5 Properties
   static Future<List<Map<String, dynamic>>> fetchTopFiveProperties() async {
@@ -97,7 +96,7 @@ class PropertyService {
 }
 
 class ApiService {
-  static const String baseUrl = "https://quantapixel.in/realestate/api/";
+  static const String baseUrl = "https://adshow.in/app/api/";
 
   static Future<Map<String, dynamic>?> getPropertyDetails(
       int propertyId) async {
@@ -110,10 +109,11 @@ class ApiService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data;
-    } else {
-      return null;
+      if (data is Map<String, dynamic>) {
+        return data; // Ensure the returned data is a Map
+      }
     }
+    return null; // Return null if the response is not successful
   }
 }
 
@@ -134,7 +134,8 @@ Future<void> fetchAllProperties() async {
 
     // Get the last property ID from the filtered list
     if (filteredTopProperties.isNotEmpty) {
-      int lastId = filteredTopProperties.last['id'];
+      int lastId =
+          int.tryParse(filteredTopProperties.last['id'].toString()) ?? 0;
 
       while (true) {
         // Fetch the next 5 properties
@@ -155,7 +156,8 @@ Future<void> fetchAllProperties() async {
 
         // Update the lastId to the last property in the newly fetched properties
         if (filteredNextProperties.isNotEmpty) {
-          lastId = filteredNextProperties.last['id'];
+          lastId =
+              int.tryParse(filteredNextProperties.last['id'].toString()) ?? 0;
         } else {
           debugPrint('No more reel properties to fetch.');
           break; // Exit the loop if no more reel properties are returned

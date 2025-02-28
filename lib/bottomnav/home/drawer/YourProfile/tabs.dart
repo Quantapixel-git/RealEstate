@@ -41,8 +41,7 @@ class _ProfileTabsState extends State<ProfileTabs> {
   }
 
   Future<void> fetchUserProperties(int userId) async {
-    final url = Uri.parse(
-        "https://quantapixel.in/realestate/api/getAllPropertiesByUserId");
+    final url = Uri.parse("https://adshow.in/app/api/getAllPropertiesByUserId");
 
     final response = await http.post(
       url,
@@ -70,8 +69,8 @@ class _ProfileTabsState extends State<ProfileTabs> {
   }
 
   Future<void> fetchSavedProperties(int userId) async {
-    final url = Uri.parse(
-        "https://quantapixel.in/realestate/api/getAllSavedPropertiesByUserId");
+    final url =
+        Uri.parse("https://adshow.in/app/api/getAllSavedPropertiesByUserId");
 
     final response = await http.post(
       url,
@@ -92,8 +91,7 @@ class _ProfileTabsState extends State<ProfileTabs> {
   Future<void> unsaveProperty(int propertyId) async {
     if (userId == null) return;
 
-    final url =
-        Uri.parse("https://quantapixel.in/realestate/api/removeSavedVideo");
+    final url = Uri.parse("https://adshow.in/app/api/removeSavedVideo");
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -104,8 +102,9 @@ class _ProfileTabsState extends State<ProfileTabs> {
       final result = jsonDecode(response.body);
       if (result['status'] == 1) {
         setState(() {
-          savedProperties
-              .removeWhere((property) => property['id'] == propertyId);
+          savedProperties.removeWhere((property) =>
+              int.tryParse(property['id'].toString()) ==
+              propertyId); // Safely parse property ID
         });
       } else {
         print("Error unsaving property: ${result['message']}");
@@ -167,8 +166,10 @@ class _ProfileTabsState extends State<ProfileTabs> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          PropertyDetailScreen(propertyId: property["id"]),
+                      builder: (context) => PropertyDetailScreen(
+                        propertyId: int.tryParse(property['id'].toString()) ??
+                            0, // Safely parse property ID
+                      ),
                     ),
                   );
                 },
@@ -190,7 +191,9 @@ class _ProfileTabsState extends State<ProfileTabs> {
                         top: 8,
                         right: 8,
                         child: GestureDetector(
-                          onTap: () => unsaveProperty(property["id"]),
+                          onTap: () => unsaveProperty(
+                              int.tryParse(property["id"].toString()) ??
+                                  0), // Safely parse property ID
                           child: Container(
                             padding: EdgeInsets.all(6),
                             decoration: BoxDecoration(

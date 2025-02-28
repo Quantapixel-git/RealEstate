@@ -10,7 +10,6 @@ import 'package:real_estate_quantapixel/bottomnav/home/mainhome/whychooseus.dart
 import 'package:real_estate_quantapixel/bottomnav/home/drawer/drawerwidget.dart';
 import 'package:real_estate_quantapixel/bottomnav/search/search.dart';
 import 'package:real_estate_quantapixel/chating/newchatlistscreen.dart';
-// import 'package:real_estate_quantapixel/chating/newchatlistscreen.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});

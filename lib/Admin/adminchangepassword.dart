@@ -10,14 +10,16 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   Future<void> _changePassword() async {
     if (_formKey.currentState!.validate()) {
       final response = await http.post(
-        Uri.parse('https://quantapixel.in/realestate/api/changePassword'),
+        Uri.parse('https://adshow.in/app/api/changePassword'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': 'admin@gmail.com',
@@ -33,7 +35,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _newPasswordController.clear();
         _confirmPasswordController.clear();
       } else {
-        _showSnackBar(data['message'] ?? 'Failed to change password', Colors.red);
+        _showSnackBar(
+            data['message'] ?? 'Failed to change password', Colors.red);
       }
     }
   }
@@ -48,21 +51,28 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Text('Change Password', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20))),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          title: Text('Change Password',
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold, fontSize: 20))),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              _buildTextField(_currentPasswordController, 'Current Password', Icons.lock, true),
+              _buildTextField(_currentPasswordController, 'Current Password',
+                  Icons.lock, true),
               const SizedBox(height: 15),
-              _buildTextField(_newPasswordController, 'New Password', Icons.lock_outline, true),
+              _buildTextField(_newPasswordController, 'New Password',
+                  Icons.lock_outline, true),
               const SizedBox(height: 15),
-              _buildTextField(_confirmPasswordController, 'Confirm New Password', Icons.lock_outline, true,
-                  validator: (value) {
+              _buildTextField(
+                  _confirmPasswordController,
+                  'Confirm New Password',
+                  Icons.lock_outline,
+                  true, validator: (value) {
                 if (value != _newPasswordController.text) {
                   return 'Passwords do not match';
                 }
@@ -74,7 +84,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: _changePassword,
-                  child: Text('Change Password', style: GoogleFonts.poppins(fontSize: 16)),
+                  child: Text('Change Password',
+                      style: GoogleFonts.poppins(fontSize: 16)),
                 ),
               ),
             ],
@@ -84,11 +95,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hintText, IconData icon, bool isPassword,
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      IconData icon, bool isPassword,
       {String? Function(String?)? validator}) {
     return TextFormField(
       controller: controller,
-      validator: validator ?? (value) => value!.isEmpty ? 'Please enter $hintText' : null,
+      validator: validator ??
+          (value) => value!.isEmpty ? 'Please enter $hintText' : null,
       obscureText: isPassword,
       decoration: InputDecoration(
         hintText: hintText,

@@ -6,7 +6,6 @@ import 'package:real_estate_quantapixel/bottomnav/home/drawer/YourProfile/upload
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileHeader extends StatefulWidget {
-
   @override
   _ProfileHeaderState createState() => _ProfileHeaderState();
 }
@@ -26,7 +25,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     int? userId = prefs.getInt('id');
 
     if (userId != null) {
-      final String apiUrl = "https://quantapixel.in/realestate/api/get-profile";
+      final String apiUrl = "https://adshow.in/app/api/get-profile";
       try {
         final response = await http.post(
           Uri.parse(apiUrl),

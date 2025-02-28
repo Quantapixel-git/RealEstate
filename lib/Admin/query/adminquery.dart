@@ -27,7 +27,7 @@ class _AdminQueryScreenState extends State<AdminQueryScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('https://quantapixel.in/realestate/api/getAllContacts'),
+        Uri.parse('https://adshow.in/app/api/getAllContacts'),
       );
 
       if (response.statusCode == 200) {
@@ -54,8 +54,7 @@ class _AdminQueryScreenState extends State<AdminQueryScreen> {
   Future<void> deleteContact(int contactId) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'https://quantapixel.in/realestate/api/deleteContactRequests'),
+        Uri.parse('https://adshow.in/app/api/deleteContactRequests'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"contact_id": contactId}),
       );
@@ -177,10 +176,21 @@ class _AdminQueryScreenState extends State<AdminQueryScreen> {
                                               GoogleFonts.poppins(fontSize: 14),
                                         ),
                                         SizedBox(height: 5),
-                                        Text(
-                                          "Message: ${contact['message']}",
-                                          style:
-                                              GoogleFonts.poppins(fontSize: 14),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.6, // Restrict width to avoid overflow
+                                          child: Text(
+                                            "Message: ${contact['message']}",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 14),
+                                            softWrap: true,
+                                            maxLines:
+                                                null, // Allows multi-line wrapping
+                                            overflow: TextOverflow
+                                                .visible, // Ensures visibility
+                                          ),
                                         ),
                                         SizedBox(height: 5),
                                         Text(

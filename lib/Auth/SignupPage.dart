@@ -32,7 +32,7 @@ class _SignuppageState extends State<Signuppage> {
       isLoading = true; // Show the loading indicator
     });
 
-    const String url = 'https://quantapixel.in/realestate/api/register';
+    const String url = 'https://adshow.in/app/api/register';
     try {
       final response = await http.post(
         Uri.parse(url),

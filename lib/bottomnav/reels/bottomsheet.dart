@@ -38,7 +38,7 @@ void showPropertyDetailsBottomSheet(
 
                   // Property Name
                   Text(
-                    property.propertyName,
+                    property.propertyName ?? "No Name", // Handle null
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -47,17 +47,25 @@ void showPropertyDetailsBottomSheet(
                   ),
                   SizedBox(height: 5),
                   Text(
-                    property.location,
+                    property.location ?? "Unknown Location", // Handle null
                     style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                   ),
                   Divider(thickness: 1, height: 20),
 
                   // Property Details
-                  _infoRow(Icons.price_change, "Price", property.price,
+                  _infoRow(Icons.price_change, "Price",
+                      property.price?.toString() ?? "Price not available",
                       color: Colors.green),
                   _infoRow(
-                      Icons.description, "Description", property.description),
-                  _infoRow(Icons.local_offer, "Amenities", property.amenities),
+                      Icons.description,
+                      "Description",
+                      property.description ??
+                          "No description available"), // Handle null
+                  _infoRow(
+                      Icons.local_offer,
+                      "Amenities",
+                      property.amenities ??
+                          "No amenities available"), // Handle null
 
                   Divider(thickness: 1, height: 20),
                   Text(
@@ -69,9 +77,10 @@ void showPropertyDetailsBottomSheet(
                     ),
                   ),
                   SizedBox(height: 10),
-                  _infoRow(Icons.person, "Owner", property.userName),
+                  _infoRow(Icons.person, "Owner",
+                      property.userName ?? "Unknown Owner"), // Handle null
                   _infoRow(Icons.phone, "Contact",
-                      property.mobile), // Use property.mobile instead
+                      property.mobile ?? "No contact available"), // Handle null
 
                   SizedBox(height: 20),
                 ],
@@ -114,7 +123,6 @@ Widget _infoRow(IconData icon, String title, String value,
           child: Text(
             value,
             style: TextStyle(fontSize: 14, color: color),
-            // overflow: TextOverflow.ellipsis,
             maxLines: 5,
             textAlign: TextAlign.right,
           ),

@@ -27,7 +27,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
   Future<PropertyDetails> fetchPropertyDetails(int propertyId) async {
     final response = await http.post(
-      Uri.parse('https://quantapixel.in/realestate/api/getPropertyDetails'),
+      Uri.parse('https://adshow.in/app/api/getPropertyDetails'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'property_id': propertyId}),
     );
@@ -260,19 +260,21 @@ class PropertyDetails {
 
   factory PropertyDetails.fromJson(Map<String, dynamic> json) {
     return PropertyDetails(
-      id: json['id'],
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id'].toString()) ?? 0,
       userId: json['user_id'].toString(),
-      userName: json['user_name'],
-      userMobile: json['user_mobile'],
-      mobile: json['mobile'],
-      propertyName: json['property_name'],
-      propertyType: json['property_type'],
-      thumbnailUrl: json['thumbnail_url'],
-      videoUrl: json['video_url'],
-      location: json['location'],
-      price: json['price'],
-      description: json['description'],
-      amenities: json['amenities'],
+      userName: json['user_name'] ?? 'Unknown',
+      userMobile: json['user_mobile'] ?? '',
+      mobile: json['mobile'] ?? '',
+      propertyName: json['property_name'] ?? 'No Name',
+      propertyType: json['property_type'] ?? 'N/A',
+      thumbnailUrl: json['thumbnail_url'] ?? '',
+      videoUrl: json['video_url'] ?? '',
+      location: json['location'] ?? 'Not specified',
+      price: json['price']?.toString() ?? '0',
+      description: json['description'] ?? 'No description available',
+      amenities: json['amenities'] ?? 'No amenities listed',
     );
   }
 }

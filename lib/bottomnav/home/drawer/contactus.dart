@@ -19,7 +19,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
   Future<void> submitForm() async {
     if (_formKey.currentState!.validate()) {
       final url =
-          Uri.parse("https://quantapixel.in/realestate/api/storeContact");
+          Uri.parse("https://adshow.in/app/api/storeContact");
       final Map<String, String> body = {
         "name": nameController.text,
         "mobile": phoneController.text,

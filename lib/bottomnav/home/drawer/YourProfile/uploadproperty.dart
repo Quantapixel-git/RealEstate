@@ -29,16 +29,9 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
     final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
       File selectedVideo = File(pickedFile.path);
-      int fileSize = await selectedVideo.length();
-
-      if ((selectedType == 'video' && fileSize > 5 * 1024 * 1024) ||
-          (selectedType == 'reel' && fileSize > 2 * 1024 * 1024)) {
-        _showSnackbar("Video size exceeds the limit", Colors.red);
-      } else {
-        setState(() {
-          videoFile = selectedVideo;
-        });
-      }
+      setState(() {
+        videoFile = selectedVideo;
+      });
     }
   }
 
@@ -71,7 +64,7 @@ class _UploadPropertyScreenState extends State<UploadPropertyScreen> {
 
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('https://quantapixel.in/realestate/api/storeProperty'),
+        Uri.parse('https://adshow.in/app/api/storeProperty'),
       );
 
       request.fields['user_id'] = userId.toString();

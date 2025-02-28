@@ -26,8 +26,7 @@ class _RejectedPropertiesScreenState extends State<RejectedPropertiesScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://quantapixel.in/realestate/api/getAllRejectedProperties'),
+        Uri.parse('https://adshow.in/app/api/getAllRejectedProperties'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -57,7 +56,7 @@ class _RejectedPropertiesScreenState extends State<RejectedPropertiesScreen> {
   Future<void> deleteProperty(int propertyId) async {
     try {
       final response = await http.post(
-        Uri.parse('https://quantapixel.in/realestate/api/deleteProperty'),
+        Uri.parse('https://adshow.in/app/api/deleteProperty'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'property_id': propertyId}),
       );
@@ -78,7 +77,7 @@ class _RejectedPropertiesScreenState extends State<RejectedPropertiesScreen> {
     }
   }
 
-  void showDeleteConfirmationDialog(int propertyId) {
+  void showDeleteConfirmationDialog(String propertyId) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -92,7 +91,7 @@ class _RejectedPropertiesScreenState extends State<RejectedPropertiesScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context); // Close the dialog
-              deleteProperty(propertyId); // Proceed with deletion
+              deleteProperty(int.parse(propertyId)); // Convert to int
             },
             child: Text("Delete", style: TextStyle(color: Colors.red)),
           ),
@@ -173,7 +172,8 @@ class _RejectedPropertiesScreenState extends State<RejectedPropertiesScreen> {
                                           Icon(Icons.delete, color: Colors.red),
                                       onPressed: () {
                                         showDeleteConfirmationDialog(
-                                            property['id']);
+                                            property['id']
+                                                .toString()); // Pass as String
                                       },
                                     ),
                                   ],

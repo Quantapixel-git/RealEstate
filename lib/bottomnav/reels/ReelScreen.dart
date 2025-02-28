@@ -67,7 +67,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
   Future<PropertyDetails?> fetchPropertyDetails(int propertyId) async {
     try {
       final response = await http.post(
-        Uri.parse('https://quantapixel.in/realestate/api/getPropertyDetails'),
+        Uri.parse('https://adshow.in/app/api/getPropertyDetails'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'property_id': propertyId}),
       );
@@ -118,7 +118,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
 
     // Make the API call
     final response = await http.post(
-      Uri.parse('https://quantapixel.in/realestate/api/storeSavedVideo'),
+      Uri.parse('https://adshow.in/app/api/storeSavedVideo'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -176,7 +176,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
     };
 
     final response = await http.post(
-      Uri.parse('https://quantapixel.in/realestate/api/storeLikedVideo'),
+      Uri.parse('https://adshow.in/app/api/storeLikedVideo'),
       headers: {
         'Content-Type': 'application/json',
       },

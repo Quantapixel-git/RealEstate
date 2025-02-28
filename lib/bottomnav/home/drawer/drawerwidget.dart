@@ -49,7 +49,7 @@ class _DrawerwidgetState extends State<Drawerwidgett> {
 
     if (userId == null) return;
 
-    final String apiUrl = "https://quantapixel.in/realestate/api/get-profile";
+    final String apiUrl = "https://adshow.in/app/api/get-profile";
     try {
       final response = await http.post(
         Uri.parse(apiUrl),

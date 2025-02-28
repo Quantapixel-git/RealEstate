@@ -28,8 +28,7 @@ class _ChatListPageState extends State<ChatListPage> {
     if (userId != null) {
       try {
         final response = await http.post(
-          Uri.parse(
-              'https://quantapixel.in/realestate/api/getAllUniqueChatsbyUser'),
+          Uri.parse('https://adshow.in/app/api/getAllUniqueChatsbyUser'),
           headers: {
             "Content-Type": "application/json",
           },
@@ -43,7 +42,10 @@ class _ChatListPageState extends State<ChatListPage> {
 
           if (responseData['status'] == 1) {
             setState(() {
-              chats = responseData['data']; // Extract data list
+              // Filter out chats where user1 and user2 are the same
+              chats = responseData['data'].where((chat) {
+                return chat['user1'] != chat['user2'];
+              }).toList();
               isLoading = false;
             });
           } else {
@@ -65,7 +67,7 @@ class _ChatListPageState extends State<ChatListPage> {
         });
       }
     } else {
-      print('User ID not found in SharedPreferences');
+      print('User  ID not found in SharedPreferences');
       setState(() {
         isLoading = false;
       });
@@ -149,9 +151,17 @@ class _ChatListPageState extends State<ChatListPage> {
                             return; // Prevent navigation if senderId is missing
                           }
 
+                          // Safely parse receiverId
                           int receiverId = (chat['user1'] == senderId)
-                              ? chat['user2']
-                              : chat['user1'];
+                              ? int.tryParse(chat['user2'].toString()) ??
+                                  0 // Convert to int safely
+                              : int.tryParse(chat['user1'].toString()) ??
+                                  0; // Convert to int safely
+
+                          // Safely parse propertyId
+                          int propertyId =
+                              int.tryParse(chat['property_id'].toString()) ??
+                                  0; // Convert to int safely
 
                           print('Final senderId: $senderId'); // Debugging
                           print('Final receiverId: $receiverId'); // Debugging
@@ -161,7 +171,8 @@ class _ChatListPageState extends State<ChatListPage> {
                             MaterialPageRoute(
                               builder: (context) => ChatScreen(
                                 receiverId: receiverId.toString(),
-                                propertyId: chat['property_id'],
+                                propertyId:
+                                    propertyId, // Use the safely parsed propertyId
                                 senderId: senderId
                                     .toString(), // Pass sender ID correctly
                               ),
